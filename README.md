@@ -42,6 +42,7 @@ Here are the reference documents used during the assessment:
 - BackEnd: gin-gonic: [Documentation](https://gin-gonic.com/docs/quickstart/)
 - RTK query: [Documentation](https://redux-toolkit.js.org/rtk-query/overview)
 - Golang: [Official Website](https://go.dev/learn/)
+- ChatGTP
 
 ## TODO List
 
