@@ -1,53 +1,53 @@
-# Check List for the Assessment
-1. Smart contracts :
-    a. Develop and Deploy NFT smart contracts  (done)
-    b. The smart contracts should be able to mint NFT   
-        i. Mint only valid certain duration (example between 7 Jan to 14 Jan 2023) (done)
-        ii. Mint only once for each wallet and Receipt (refer to 3.i)  (done)
-        iii. The receipt will have to be store in smart contract state  (partially done)
-        iv. Only able to mint 5 NFT  (done)
-        v. The NFT should have metadata (name, description, image)  (done)
-    c. Script to deploy the smart contract   (partially done)
-2. WebApp :
-    a. React app with any preferred React framework can be used  (done)
-    b. Web3 integration with web3.js or ether.js  (done)
-    c. Collect user input e.g. NRIC  (done)
-    d. Interact with Smart contract by Claim (mint) NFT with the connected wallet and
-    Receipt (refer to 3.i)   (done)
-    e. The App should display the NFT image from NFT metadata (Not done)
-    f. The necessary error handlings to be developed (Not done)
-3. API:
-    a. Golang API  
-    b. Any preferred framework (example gin-gonic) (done)  
-    c. The API will collect National Registration Identity Card (NRIC) and wallet address  
-    from WebApp (done)
-    d. POST API body: NRIC and wallet address (done)
-    e. NRIC must be unique (Not done) 
-    f. Wallet address can only be associated with 1 NRIC (Not done)
-    g. Store into RDBS (PostgreSQL, MySQL, etc) for the unique NRIC and wallet
-    address (Partially done) 
-    h. Provide the docker-compose.yaml script for the RDBS stack  (done)
-    i. POST API Response with a Receipt produce by encrypt or hash the API body, you
-    would need to explain why you choose one mechanism over the other (encrypt vs
-    hash) (Note done)
+Assessment Checklist
+This is a checklist summarizing the progress made in completing the assessment.
 
-# Rererance Documents 
-Solidity 0.8.9 https://docs.soliditylang.org/en/latest/
-NFT lib : openzeppelin ERC721 : https://docs.openzeppelin.com/contracts/4.x/erc721
-NFT Storage: https://nft.storage/
-Build Tool :  https://hardhat.org/
-FrontEnd : React/ MUI5  
-BackEnd : https://github.com/gin-gonic/gin
-RTK query: https://redux-toolkit.js.org/rtk-query/overview
-Golang : https://go.dev/learn/
-gin-gonic : https://gin-gonic.com/docs/quickstart/
-ChatDTP 
+Smart Contracts:
 
-# ToDO
-1. Styling in UI 
-2. Cover unit testing 
-3. Add property files based on the environment(currently uses hardcoded values) 
-4. Deploy script for multiple environments 
-5. Update DB tables with one to many relationships (Owner, Wallets) 
-6. Improve the backend API to support updating existing owners with multiple wallets 
-7. Fetch NFTs wallet owners NFTs and display in separate components
+Developed and deployed NFT smart contracts.
+Implemented functionality to mint NFTs within a specified duration (e.g., between 7 Jan to 14 Jan 2023).
+Restricted NFT minting to occur only once per wallet and receipt.
+Partially stored the receipt in the smart contract state.
+Limited the maximum number of NFTs that can be minted to 5.
+Added metadata (name, description, image) to the NFTs.
+Partially developed a script to deploy the smart contract.
+WebApp:
+
+Created a React app using the preferred React framework.
+Integrated Web3 with either web3.js or ether.js.
+Implemented user input collection, such as National Registration Identity Card (NRIC).
+Enabled interaction with the smart contract to claim (mint) NFTs using the connected wallet and receipt.
+Not implemented: Displaying the NFT image from NFT metadata.
+Not implemented: Necessary error handling.
+API:
+
+Developed a Golang API.
+Utilized the gin-gonic framework for the API.
+Collected National Registration Identity Card (NRIC) and wallet address from the WebApp.
+Defined a POST API to receive the NRIC and wallet address in the request body.
+Not implemented: Ensuring NRIC uniqueness.
+Not implemented: Restricting wallet address association with only one NRIC.
+Partially stored the data in a relational database management system (RDBS) like PostgreSQL or MySQL.
+Provided a docker-compose.yaml script for the RDBS stack.
+Not implemented: Producing a receipt as the POST API response using encryption or hashing mechanisms.
+Reference Documents
+Here are the reference documents used during the assessment:
+
+Solidity 0.8.9: Documentation
+NFT lib: OpenZeppelin ERC721: Documentation
+NFT Storage: Website
+Build Tool: Hardhat: Documentation
+FrontEnd: React/MUI5
+BackEnd: gin-gonic: Documentation
+RTK query: Documentation
+Golang: Official Website
+TODO List
+The following tasks need to be completed:
+
+Styling in UI.
+Unit testing coverage.
+Addition of property files based on the environment (currently using hardcoded values).
+Deployment script for multiple environments.
+Updating DB tables with one-to-many relationships (Owners, Wallets).
+Improving the backend API to support updating existing owners with multiple wallets.
+Fetching NFTs owned by wallet owners and displaying them in separate components.
+Please note that this checklist is subject to updates as the assessment progresses.
