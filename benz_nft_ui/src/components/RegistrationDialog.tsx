@@ -9,8 +9,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import { useRegisterUserMutation, userApi } from "../servicers/userApi";
+import { useState } from "react";
+import { useRegisterUserMutation } from "../servicers/userApi";
 
 interface RegistrationDialogType {
   openDalog: boolean;
@@ -18,14 +18,15 @@ interface RegistrationDialogType {
   setOpenDialog: (open: boolean) => void;
 }
 const RegistrationDialog = (props: RegistrationDialogType) => {
+  const { walletAddress } = props;
   const [nric, setNric] = useState<string>("");
-  const [registerUser, { isLoading: isUpdating }] = useRegisterUserMutation();
+  const [registerUser] = useRegisterUserMutation();
   const handleClose = () => {
     props.setOpenDialog(false);
   };
   const registerUserEvent = () => {
     console.log(nric);
-    registerUser({ nric })
+    registerUser({ nric, walletAddress: walletAddress })
       .then((result) => {
         console.log("Succfully registered!!", result);
       })
@@ -48,17 +49,30 @@ const RegistrationDialog = (props: RegistrationDialogType) => {
             autoFocus
             margin="dense"
             id="nric"
-            label="NRIC Number"
             value={nric}
+            placeholder="NRIC Number"
             fullWidth
             variant="standard"
             onChange={(event) => setNric(event.target.value)}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={registerUserEvent}>Register</Button>
+          <Button variant="outlined" color="inherit" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={registerUserEvent}
+          >
+            Register
+          </Button>
         </DialogActions>
+        {/* <Snackbar open={true} autoHideDuration={6000} onClose={handleClose}>
+        <Alert  severity="error" sx={{ width: '100%' }}>
+          This is a success message!
+        </Alert>
+        </Snackbar> */}
       </Dialog>
     </Box>
   );

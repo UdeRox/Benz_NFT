@@ -1,20 +1,20 @@
-import { createApi, fetchBaseQuery, retry } from '@reduxjs/toolkit/query/react'
-import { RootState } from '../store'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 // Create our baseQuery instance
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:8080/',
+  baseUrl: 'http://localhost:8000/',
   // prepareHeaders: (headers, { getState }) => {
-  //   // By default, if we have a token in the store, let's use that for authenticated requests
-  //   const token = (getState() as RootState).auth.token
-  //   if (token) {
-  //     headers.set('authentication', `Bearer ${token}`)
-  //   }
-  //   return headers
+    // By default, if we have a token in the store, let's use that for authenticated requests
+    // const token = (getState() as RootState).auth.token
+    // if (token) {
+    //   headers.set('authentication', `Bearer ${token}`)
+    // }
+    // headers.set('Content-Type', 'application/json');
+    // return headers;
   // },
 })
 
-const baseQueryWithRetry = retry(baseQuery, { maxRetries: 6 })
+// const baseQueryWithRetry = retry(baseQuery, { maxRetries: 1 })
 
 /**
  * Create a base API to inject endpoints into elsewhere.
@@ -34,7 +34,8 @@ export const api = createApi({
   /**
    * A bare bones base query would just be `baseQuery: fetchBaseQuery({ baseUrl: '/' })`
    */
-  baseQuery: baseQueryWithRetry,
+  // baseQuery: baseQueryWithRetry,
+  baseQuery: baseQuery,
   /**
    * Tag types must be defined in the original API definition
    * for any tags that would be provided by injected endpoints
