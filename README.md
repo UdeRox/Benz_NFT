@@ -3,31 +3,31 @@
 This checklist summarizes the progress made in completing the assessment.
 
 ## Smart Contracts
-1. Developed and deployed NFT smart contracts.
-2. Implemented functionality to mint NFTs within a specified duration (e.g., between 7 Jan to 14 Jan 2023).
-3. Restricted NFT minting to occur only once per wallet and receipt.
-4. Partially stored the receipt in the smart contract state.
-5. Limited the maximum number of NFTs that can be minted to 5.
-6. Added metadata (name, description, image) to the NFTs.
-7. Partially developed a script to deploy the smart contract.
+1. Developed and deployed NFT smart contracts.(done)
+2. Implemented functionality to mint NFTs within a specified duration (e.g., between 7 Jan to 14 Jan 2023). (done)
+3. Restricted NFT minting to occur only once per wallet and receipt. (patially done)
+4. stored the receipt in the smart contract state.( partially done)
+5. Limited the maximum number of NFTs that can be minted to 5. (done)
+6. Added metadata (name, description, image) to the NFTs. (done)
+7. developed a script to deploy the smart contract.(done)
 
 ## WebApp
-1. Created a React app using the preferred React framework.
-2. Integrated Web3 with either web3.js or ether.js.
-3. Implemented user input collection, such as National Registration Identity Card (NRIC).
-4. Enabled interaction with the smart contract to claim (mint) NFTs using the connected wallet and receipt.
+1. Created a React app using the preferred React framework.(done)
+2. Integrated Web3 with either web3.js or ether.js.(done)
+3. Implemented user input collection, such as National Registration Identity Card (NRIC).(done)
+4. Enabled interaction with the smart contract to claim (mint) NFTs using the connected wallet and receipt.(done)
 5. **[TODO]** Display the NFT image from NFT metadata.
 6. **[TODO]** Implement necessary error handling.
 
 ## API
-1. Developed a Golang API.
-2. Utilized the gin-gonic framework for the API.
-3. Collected National Registration Identity Card (NRIC) and wallet address from the WebApp.
-4. Defined a POST API to receive the NRIC and wallet address in the request body.
+1. Developed a Golang API. (done)
+2. Utilized the gin-gonic framework for the API.(done)
+3. Collected National Registration Identity Card (NRIC) and wallet address from the WebApp.(done)
+4. Defined a POST API to receive the NRIC and wallet address in the request body.(done) 
 5. **[TODO]** Ensure NRIC uniqueness.
 6. **[TODO]** Restrict wallet address association with only one NRIC.
-7. Partially stored the data in a relational database management system (RDBS) like PostgreSQL or MySQL.
-8. Provided a docker-compose.yaml script for the RDBS stack.
+7. stored the data in a relational database management system (RDBS) like PostgreSQL or MySQL.(partially done)
+8. Provided a docker-compose.yaml script for the RDBS stack. (done)
 9. **[TODO]** Produce a receipt as the POST API response using encryption or hashing mechanisms.
 
 ## Reference Documents
@@ -55,4 +55,8 @@ The following tasks need to be completed:
 6. Improving the backend API to support updating existing owners with multiple wallets.
 7. Fetching NFTs owned by wallet owners and displaying them in separate components.
 
-Ple
+This project consist two modules,
+1. benz_nft_backend (contains backend api, DB)
+2. benz_nft_ui (contains frontend and smartcontract)
+
+Please refer to the relevant module's README.md file for instructions on how to start the modules in development mode. Please note that multiple environments are not supported at the moment.
