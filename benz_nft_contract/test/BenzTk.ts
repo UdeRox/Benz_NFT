@@ -10,9 +10,10 @@ describe("BenzToken", function () {
 
   beforeEach(async function () {
     [owner, otherAccount] = await ethers.getSigners();
-
+    const cost = ethers.utils.parseEther("0.05");
+    const validityPeriodInDays = 30; 
     const BenzTokenFactory = await ethers.getContractFactory("BenzToken");
-    benzToken = (await BenzTokenFactory.deploy()) as BenzToken;
+    benzToken = (await BenzTokenFactory.deploy(cost, validityPeriodInDays)) as BenzToken;
     await benzToken.deployed();
   });
 
