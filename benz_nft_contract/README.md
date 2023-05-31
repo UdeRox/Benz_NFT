@@ -11,3 +11,11 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.ts
 ```
+
+
+yarn install 
+
+npx hardhat node
+npx hardhat test 
+npx hardhat run scripts/deploy.ts --network localhost
+
