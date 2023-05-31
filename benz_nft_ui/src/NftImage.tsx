@@ -1,16 +1,12 @@
-import { Box, Button, Grid, TextField } from "@mui/material";
 import { ethers } from "ethers";
-import { useState, useEffect } from "react";
-import { NFTStorage, File as NFTFile } from "nft.storage";
-import { contract, signer } from "./Home";
+import { File as NFTFile, NFTStorage } from "nft.storage";
+import { useEffect, useRef, useState } from "react";
+import { getTheContract } from "./connectToWallet";
+import { Backdrop, Box, Button, CircularProgress, Grid, TextField, Typography } from "./lib/mui";
+import { useTypedSelector } from "./store";
+export const nftStorageKey = import.meta.env.VITE_NFT_STORAGE_API_KEY;
 
-export const NftImage = ({
-  tokenId,
-  getCount,
-}: {
-  tokenId?: string;
-  getCount?: () => void;
-}) => {
+export const NftImage = () => {
   const [isMinted, setIsMinted] = useState(false);
   const [metaURI, setMetaURI] = useState<string>("");
   const [name, setName] = useState("");
@@ -19,20 +15,12 @@ export const NftImage = ({
   const [ipfsImage, setIpfsImage] = useState<any>(null);
   const [nameError, setNameError] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
-
-  useEffect(() => {
-    getMintStatus();
-  }, [isMinted]);
-
-  const getMintStatus = async () => {
-    const result = await contract.isContentOwned(metaURI);
-    setIsMinted(result);
-  };
+  const { owner, activeWallet } = useTypedSelector((state) => state.user);
+  const [minting, setMinting] = useState(false);
 
   const uploadImageTOIPFS = async () => {
     const nftstorage = new NFTStorage({
-      token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDI1Q2UyMzEwMjkxMjQ1RjA4MjcwODdlQzdlMTY2MTQyNEE4YmY1QWMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY4NTExNjc2ODI3NCwibmFtZSI6ImJuel9uZnQifQ.uobDt_klTRJxEcv4g33FoeKdeCc3B4BVGHDhAARr-Ms",
+      token: nftStorageKey,
       // token: process.env.REACT_APP_NFT_STORAGE_API_KEY ?? "",
     });
     const { ipnft } = await nftstorage.store({
@@ -46,8 +34,10 @@ export const NftImage = ({
   };
 
   const uploadImageFromBrowser = async (e: any) => {
-    setIpfsImage(e.target.files && e.target.files[0]);
-    setUploadImge(URL.createObjectURL(e.target.files && e.target.files[0]));
+    // setIpfsImage(e.target.files && e.target.files[0]);
+    setIpfsImage(e);
+    // setUploadImge(URL.createObjectURL(e.target.files && e.target.files[0]));
+    setUploadImge(URL.createObjectURL(e));
   };
 
   const mintToken = async () => {
@@ -64,26 +54,22 @@ export const NftImage = ({
       setNameError("Name is required!");
       return;
     }
+
+    setMinting(true);
     const ipfsURI = await uploadImageTOIPFS();
-    const connection = contract.connect(signer);
-    const addr = connection.address;
-    console.log("Mint Addres", addr);
-    console.log("Mint URI ", ipfsURI);
-    const result = await contract.payToMint(addr, ipfsURI, {
+    const { contract } = await getTheContract();
+    const result = await contract.payToMint(activeWallet, ipfsURI, {
       value: ethers.utils.parseEther("0.05"),
       //   gasLimit: ethers.utils.parseEther("0.10"),
       gasLimit: 300000,
     });
     await result.wait();
-    await getMintStatus();
-    getCount?.();
+    const owned = await contract.isContentOwned(metaURI);
+    setIsMinted(result);
+    setMinting(false)
   };
 
-  const getURI = async () => {
-    console.log("token Id ", tokenId);
-    const uri = await contract.tokenURI(tokenId);
-    alert(uri);
-  };
+  const fileInputRef = useRef<any>(null);
 
   return (
     <Box
@@ -92,17 +78,19 @@ export const NftImage = ({
         p: 2,
         display: "flex",
         justifyContent: "center",
+        alignItems: "center",
         bgcolor: "background.paper",
         border: "1px solid rgb(229, 232, 235)",
       }}
     >
-      <Grid
-        container
-        direction="column"
-        spacing={1}
-        justifyContent="space-between"
-        alignContent={"baseline"}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={minting}
+        // onClick={handleClose}
       >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Grid container direction="column" spacing={2} alignItems="center">
         <Grid item>
           <Box>
             <img
@@ -111,6 +99,11 @@ export const NftImage = ({
               alt={`NFT #`}
             />
           </Box>
+        </Grid>
+        <Grid item>
+          <>
+            <FileUploadButton onFileSelect={uploadImageFromBrowser} />
+          </>
         </Grid>
         <Grid item>
           <TextField
@@ -123,6 +116,7 @@ export const NftImage = ({
               setName(event.target.value);
               setNameError("");
             }}
+            sx={{ width: "300px" }}
           />
         </Grid>
         <Grid item>
@@ -130,34 +124,66 @@ export const NftImage = ({
             name="description"
             error={Boolean(descriptionError)}
             placeholder="Description"
-            variant="standard"
+            variant="outlined"
+            multiline
+            rows={3}
             helperText={descriptionError}
             onChange={(event) => {
               setDescrition(event.target.value);
               setDescriptionError("");
             }}
+            sx={{ width: "300px" }}
           />
         </Grid>
         <Grid item>
-          <Button variant="outlined" color="inherit" onClick={mintToken}>
-            Mint
-          </Button>
-        </Grid>
-        <div>
-          <h5>ID # {tokenId}</h5>
-          {!isMinted ? (
-            <Button variant="outlined" color="inherit" onClick={mintToken}>
-              Mint
-            </Button>
-          ) : (
-            <Button variant="outlined" color="inherit" onClick={getURI}>
-              Taken!, show URI
+          {!isMinted && (
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={mintToken}
+              disabled={!uploadImge || !name || !description} // Disable the button if image, name, or description is not filled
+            >
+              Mint This Image as NFT
             </Button>
           )}
-          <input type="file" onChange={uploadImageFromBrowser} />
-        </div>
+        </Grid>
       </Grid>
     </Box>
   );
 };
 export default NftImage;
+
+const FileUploadButton = ({ onFileSelect }: any) => {
+  const fileInputRef = useRef<any>(null);
+  const [previewImage, setPreviewImage] = useState<any>(null);
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileSelect = (event: any) => {
+    const file = event.target.files[0];
+    onFileSelect(file);
+    setPreviewImage(URL.createObjectURL(file));
+  };
+
+  return (
+    <>
+      <input
+        ref={fileInputRef}
+        type="file"
+        style={{ display: "none" }}
+        onChange={handleFileSelect}
+        accept="image/*"
+      />
+      <Button
+        variant="outlined"
+        color="inherit"
+        component="label"
+        onClick={handleButtonClick}
+      >
+        <Typography>Upload the Image</Typography>
+      </Button>
+    </>
+  );
+};

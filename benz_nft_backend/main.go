@@ -22,7 +22,7 @@ func main() {
   ownerRoute := routes.NewOwnerRoute(ownerController, router) // post routes are initialized
   ownerRoute.Setup() // post routes are being setup
   
-  db.DB.AutoMigrate(&models.Owner{},&models.Post{},) // migrating Post model to datbase table
+  db.DB.AutoMigrate(&models.Owner{}) // migrating Post model to datbase table
   router.Gin.Run(":8000") //server started on 8000 port
 
 }

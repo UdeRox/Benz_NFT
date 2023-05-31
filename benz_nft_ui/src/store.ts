@@ -1,14 +1,13 @@
-import { configureStore, ConfigureStoreOptions } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { ConfigureStoreOptions, TypedUseSelectorHook, configureStore, useDispatch, useSelector } from "./lib/redux";
 import { api } from "./servicers/api";
-// import polling from '../features/polling/pollingSlice'
-// import auth from '../features/auth/authSlice'
+import userSlice from "./userSlice";
 
 export const createStore = (
   options?: ConfigureStoreOptions["preloadedState"] | undefined
 ) =>
   configureStore({
     reducer: {
+      user: userSlice,
       [api.reducerPath]: api.reducer,
     },
     middleware: (getDefaultMiddleware) =>
