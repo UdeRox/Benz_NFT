@@ -33,9 +33,8 @@ export const NftHeaderBar = () => {
     dispatch(walletConnected(account));
   };
   useEffect(() => {
-    console.log("is Loading ", isLoading);
-    console.log("()**()*()*() isSuccess ", isSuccess);
     if (isSuccess) {
+      // @ts-ignore
       const user: any = data.data as Owner;
       console.log("Data Results ");
       dispatch(authenticated({ ...user }));
@@ -45,6 +44,7 @@ export const NftHeaderBar = () => {
   useEffect(() => {
     const getUserNfts = async () => {
       const { contract } = await getTheContract();
+      // @ts-ignore
       const resultNfts = await contract.getOwnedTokens(owner.walletAddress);
       console.log("Rresults ntsss ", resultNfts);
       dispatch(userNftFetched(resultNfts));

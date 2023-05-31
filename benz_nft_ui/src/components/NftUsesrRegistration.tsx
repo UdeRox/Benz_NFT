@@ -20,9 +20,10 @@ const NftUserRegistration = () => {
   const { activeWallet = "" } = useTypedSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const registerUserEvent = () => {
-    console.log(nric);
+    // @ts-ignore
     registerUser({ nric, walletAddress: activeWallet })
       .then((result) => {
+        // @ts-ignore
         dispatch(authenticated({ walletAddress: activeWallet, nric }));
         console.log("Succfully registered!!", result);
       })
@@ -72,16 +73,8 @@ const NftUserRegistration = () => {
           </Grid>
         </Grid>
       </Grid>
-
-      {/* <Button variant="outlined" color="inherit" onClick={handleClose}>
-            Cancel
-          </Button> */}
-      {/* <Snackbar open={true} autoHideDuration={6000} onClose={handleClose}>
-        <Alert  severity="error" sx={{ width: '100%' }}>
-          This is a success message!
-        </Alert>
-        </Snackbar> */}
       <Alert severity={isSuccess ? "success" : "error"}>
+       {/* @ts-ignore */}
         <AlertTitle>{isSuccess ? data?.message : error?.data.error}</AlertTitle>
       </Alert>
     </Box>
