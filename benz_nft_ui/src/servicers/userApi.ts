@@ -1,13 +1,21 @@
 import { api } from "./api";
-interface Owner {
+export interface Owner {
   id?: string;
   username?: string;
   nric?: string;
+  wallets:string[];
   walletAddress?: string;
+}
+
+export interface OwnerResponse {
+  data: Owner;
+  error: string;
+  success: boolean;
+  message: string;
 }
 export const userApi = api.injectEndpoints({
   endpoints: (build) => ({
-    registerUser: build.mutation<Owner, Partial<Owner>>({
+    registerUser: build.mutation<OwnerResponse, Partial<Owner>>({
       query(body) {
         return {
           url: `owners/`,
@@ -17,15 +25,11 @@ export const userApi = api.injectEndpoints({
       },
       //   invalidatesTags: ["Posts"],
     }),
-    getOwners: build.query<Owner, void>({
+    getOwners: build.query<OwnerResponse, void>({
       query: () => "owners/",
     }),
-    getOwnerForConnectedWallert: build.query<Owner, string>({
+    getOwnerForConnectedWallet: build.query<OwnerResponse, string|undefined|null>({
       query: (address) => `owners/${address}`,
-    }),
-    getPost: build.query<Owner, number>({
-      query: (id) => `posts/${id}/`,
-      providesTags: (_result, _err, id) => [{ type: "Posts", id }],
     }),
     updatePost: build.mutation<Owner, Partial<Owner>>({
       query(data) {
@@ -53,5 +57,5 @@ export const userApi = api.injectEndpoints({
 export const {
   useRegisterUserMutation,
   useGetOwnersQuery,
-  useGetOwnerForConnectedWallertQuery,
+  useGetOwnerForConnectedWalletQuery,
 } = userApi;
