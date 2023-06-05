@@ -96,7 +96,7 @@ func (p *OwnerController) GetOwner(c *gin.Context) {
     owner.WalletAddress = walletParam
     foundOwner, err := p.service.Find(owner)
     if err != nil {
-        util.ErrorJSON(c, http.StatusBadRequest, "Owner Not found!")
+        util.ErrorJSON(c, http.StatusNotFound, "Not a registered User!")
         return
     }
     response := foundOwner.ResponseMap()
