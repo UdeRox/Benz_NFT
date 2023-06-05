@@ -6,14 +6,26 @@ async function main() {
   const lockedAmount = ethers.utils.parseEther("0.001");
   const cost = ethers.utils.parseEther("0.05");
   const validityPeriodInDays = 30; // Set the desired validity period in days
+  const maxSupply = 5
+  const deploymentOptions = {
+    gasLimit: 2000000, // Set the desired gas limit for deployment
+  };
 
   const BenzToken = await ethers.getContractFactory("BenzToken");
-  const token = await BenzToken.deploy(cost, validityPeriodInDays);
+  const token = await BenzToken.deploy(
+    cost,
+    validityPeriodInDays,
+    maxSupply
+  );
 
   await token.deployed();
 
   console.log(
-    `BenzToken deployed with cost ${ethers.utils.formatEther(cost)}, validity period ${validityPeriodInDays} days, and unlock timestamp ${unlockTime} to address: ${token.address}`
+    `BenzToken deployed with cost ${ethers.utils.formatEther(
+      cost
+    )}, validity period ${validityPeriodInDays} days, and unlock timestamp ${unlockTime} to address: ${
+      token.address
+    }`
   );
 }
 
