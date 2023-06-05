@@ -3,6 +3,7 @@ import NftImage from "./NftImage";
 import NftUserNftList from "./NftToeknList";
 import WalletList from "./NftWalletList";
 import { walletConnected } from "./actions";
+import { NftNotification } from "./components";
 import NftInstallPlugin from "./components/NftIntallPlugin";
 import NftUserRegistration from "./components/NftUsesrRegistration";
 import { connectToWallet } from "./connectToWallet";
@@ -44,7 +45,8 @@ export const Home = () => {
       <NftHeaderBar />
       {isAuthenticated && userNftList.length === 0 && <NftMindBox />}
       {displayNftListComponent && <NftUserNftList />}
-      {error && !isAuthenticated && <NftUserRegistration />}
+      {error && <NftNotification type={"error"} goResponse={error} />}
+      {isSuccess && !isAuthenticated && <NftUserRegistration />}
       <Box hidden={!!activeWallet}>
         {!activeWallet && (
           <>
