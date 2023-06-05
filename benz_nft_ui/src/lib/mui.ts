@@ -1,5 +1,6 @@
 import MenuIcon from "@mui/icons-material/Menu";
 import { AccountCircle } from "@mui/icons-material";
+import { AlertColor } from "@mui/material";
 import {
   AppBar,
   Badge,
@@ -60,3 +61,5 @@ export {
   List,
   Divider,
 };
+
+export type {AlertColor}
