@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "hardhat-node":"hardhat node",
+    "hardhat-node": "hardhat node",
     "deploy": "npm run compile && hardhat run scripts/deploy.ts --network localhost",
     "compile": "hardhat compile && cp ./artifacts/contracts/BenzToken.sol/BenzToken.json ../benz_nft_ui/src/abis/BenzToken.json"
   },
@@ -32,6 +32,6 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.0",
-    "dotenv": "^16.1.1"
+    "dotenv": "^16.1.4"
   }
 }
