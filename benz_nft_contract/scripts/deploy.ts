@@ -12,19 +12,22 @@ async function main() {
   };
 
   const BenzToken = await ethers.getContractFactory("BenzToken");
-  const token = await BenzToken.deploy(
+  const nftDeployment = await BenzToken.deploy(
     cost,
     validityPeriodInDays,
     maxSupply
   );
+  const receipt = await nftDeployment.deployTransaction.wait();
+  const gasUsed = receipt.gasUsed;
+  // const gasPrice = receipt.effectiveGasPrice;
+  const gasPriceInGwei = ethers.utils.formatUnits(gasUsed, "gwei");
 
-  await token.deployed();
-
+  console.log("Used gas for the Deployment : ", gasPriceInGwei)  
   console.log(
-    `BenzToken deployed with cost ${ethers.utils.formatEther(
+    `BenzToken deployed with cost per mint ${ethers.utils.formatEther(
       cost
     )}, validity period ${validityPeriodInDays} days, and unlock timestamp ${unlockTime} to address: ${
-      token.address
+      nftDeployment.address
     }`
   );
 }

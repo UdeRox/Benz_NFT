@@ -25,7 +25,7 @@ contract BenzToken is ERC721, ERC721URIStorage, Ownable {
     /// @dev Mapping to check user already minted
     mapping(address => bool) private _hasMinted;
     /// @dev Max supply limits to 5 and, pass the value when deployment,
-    uint8 public maxSupply;
+    uint256 public maxSupply;
     /// @dev Cost in (wei) required to mint.
     uint256 public cost;
     /// @dev Timestamp when minting starts.
