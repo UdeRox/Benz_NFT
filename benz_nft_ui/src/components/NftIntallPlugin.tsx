@@ -1,11 +1,19 @@
-import React from "react";
-import { Box, Typography, Button } from "../lib/mui";
+import { Box, Button, Typography } from "@/lib/mui";
 
-const NftInstallPlugin = () => {
+const NftInstallPlugin: React.FC = () => {
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      textAlign="center"
+    >
       <Typography variant="h4">Follow the Link to install MetaMask</Typography>
-      <img src="./metamask-fox.svg" alt="MetaMask Logo" style={{ width: "200px" }} />
+      <img
+        src="./metamask-fox.svg"
+        alt="MetaMask Logo"
+        style={{ width: "200px" }}
+      />
       <Button
         variant="contained"
         color="inherit"

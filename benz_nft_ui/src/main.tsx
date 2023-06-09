@@ -1,10 +1,9 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { Provider } from "react-redux";
-import { Home } from "./Home.tsx";
+import { Home } from "@/Home";
+import NftInstallPlugin from "@/components/NftIntallPlugin";
+import { React, ReactDOM } from "@/lib/react";
+import { Provider } from "@/lib/redux";
+import { store } from "@/store";
 import "./index.css";
-import { store } from "./store.ts";
-import NftInstallPlugin from "./components/NftIntallPlugin.tsx";
 
 const AppComponent = () => {
   if (window.ethereum) {

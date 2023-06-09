@@ -1,4 +1,10 @@
-import { ConfigureStoreOptions, TypedUseSelectorHook, configureStore, useDispatch, useSelector } from "./lib/redux";
+import {
+    ConfigureStoreOptions,
+    TypedUseSelectorHook,
+    configureStore,
+    useDispatch,
+    useSelector,
+} from "./lib/redux";
 import { api } from "./servicers/api";
 import userSlice from "./userSlice";
 

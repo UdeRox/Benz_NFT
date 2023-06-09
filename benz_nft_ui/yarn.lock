@@ -1904,6 +1904,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-lazyload@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@types/react-lazyload/-/react-lazyload-3.2.0.tgz#b763f8f0c724df2c969d7e0b3a56c6aa2720fa1f"
+  integrity sha512-4+r+z8Cf7L/mgxA1vl5uHx5GS/8gY2jqq2p5r5WCm+nUsg9KilwQ+8uaJA3EUlLj57AOzOfGGwwRJ5LOVl8fwA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-transition-group@^4.4.6":
   version "4.4.6"
   resolved "https://registry.npmjs.org/@types/react-transition-group/-/react-transition-group-4.4.6.tgz"
@@ -7457,6 +7464,13 @@ raw-body@2.5.2, raw-body@^2.4.1:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+react-countdown@^2.3.5:
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/react-countdown/-/react-countdown-2.3.5.tgz#70c035b5cbc7e8fdb4ad91fe5f44afd7a7933a68"
+  integrity sha512-K26ENYEesMfPxhRRtm1r+Pf70SErrvW3g4CArLi/x6MPFjgfDFYePT4UghEj8p2nI0cqVV7/JjDgjyr//U60Og==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-dom@^16.8.6:
   version "16.14.0"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-16.14.0.tgz"
@@ -7484,6 +7498,11 @@ react-is@^18.0.0, react-is@^18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react-is/-/react-is-18.2.0.tgz"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
+
+react-lazyload@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/react-lazyload/-/react-lazyload-3.2.0.tgz#497bd06a6dbd7015e3376e1137a67dc47d2dd021"
+  integrity sha512-zJlrG8QyVZz4+xkYZH5v1w3YaP5wEFaYSUWC4CT9UXfK75IfRAIEdnyIUF+dXr3kX2MOtL1lUaZmaQZqrETwgw==
 
 react-native-fetch-api@^3.0.0:
   version "3.0.0"

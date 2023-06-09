@@ -1,3 +1,3 @@
-import {NftNotification} from './NftNotification'
-
-export {NftNotification}
+import { NftNotification } from "./NftNotification";
+import { NftBackDrop } from "./NftBackDrop";
+export { NftNotification, NftBackDrop };
