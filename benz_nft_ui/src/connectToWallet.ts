@@ -1,19 +1,23 @@
-import { ethers } from "ethers";
-import BenzToken from "./abis/BenzToken.json";
-export const contractAddress =  import.meta.env.VITE_NFT_CONTRACT_ADDRESS;
+import { ethers } from 'ethers'
+import BenzToken from './abis/BenzToken.json'
+export const contractAddress = import.meta.env.VITE_NFT_CONTRACT_ADDRESS
 
 export const connectToWallet = async () => {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
   const [account] = await window.ethereum.request({
-    method: "eth_requestAccounts",
-  });
-  const balance = await provider.getBalance(account);
-  return { account, balance };
-};
+    method: 'eth_requestAccounts',
+  })
+  const balance = await provider.getBalance(account)
+  return { account, balance }
+}
 
 export const getTheContract = async () => {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const contract = new ethers.Contract(contractAddress, BenzToken.abi, provider.getSigner());
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const contract = new ethers.Contract(
+    contractAddress,
+    BenzToken.abi,
+    provider.getSigner(),
+  )
 
-  return {contract:contract};
-};
+  return { contract: contract }
+}

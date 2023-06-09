@@ -1,21 +1,21 @@
-import { Home } from "@/Home";
-import NftInstallPlugin from "@/components/NftIntallPlugin";
-import { React, ReactDOM } from "@/lib/react";
-import { Provider } from "@/lib/redux";
-import { store } from "@/store";
-import "./index.css";
+import { Home } from '@/Home'
+import { NftInstallPlugin } from '@/components/NftInstallPlugin'
+import { React, ReactDOM } from '@/lib/react'
+import { Provider } from '@/lib/redux'
+import { store } from '@/store'
+import './index.css'
 
 const AppComponent = () => {
   if (window.ethereum) {
-    return <Home />;
+    return <Home />
   } else {
-    return <NftInstallPlugin />;
+    return <NftInstallPlugin />
   }
-};
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+}
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
       <AppComponent />
     </Provider>
-  </React.StrictMode>
-);
+  </React.StrictMode>,
+)

@@ -1,32 +1,32 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Owner } from "./servicers/userApi";
-import { RootState } from "./store";
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { Owner } from './servicers/userApi'
+import { RootState } from './store'
 
 const initialState = {
   owner: null,
   activeWallet: null,
   isAuthenticated: false,
-  userNftList:[]
+  userNftList: [],
 } as {
-  owner: null | Owner;
-  isAuthenticated: boolean;
-  activeWallet: string | null;
-  userNftList:any[];
-};
+  owner: null | Owner
+  isAuthenticated: boolean
+  activeWallet: string | null
+  userNftList: any[]
+}
 
 const slice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
-    authenticated: (state, action: PayloadAction<Owner>) => {
-      state.isAuthenticated = true;
-      state.owner = action.payload;
+    authenticated: (state, action: PayloadAction<Partial<Owner>>) => {
+      state.isAuthenticated = true
+      state.owner = action.payload
     },
     walletConnected: (state, action: PayloadAction<string>) => {
-      state.activeWallet = action.payload;
+      state.activeWallet = action.payload
     },
     userNftFetched: (state, action: PayloadAction<any[]>) => {
-      state.userNftList = action.payload;
+      state.userNftList = action.payload
     },
   },
   // extraReducers: (builder) => {
@@ -43,10 +43,10 @@ const slice = createSlice({
   //       console.log('rejected', action)
   //     })
   // },
-});
+})
 
-export const { authenticated } = slice.actions;
-export default slice.reducer;
+export const { authenticated } = slice.actions
+export default slice.reducer
 
 export const selectIsAuthenticated = (state: RootState) =>
-  state.user.isAuthenticated;
+  state.user.isAuthenticated

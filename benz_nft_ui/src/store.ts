@@ -1,15 +1,15 @@
 import {
-    ConfigureStoreOptions,
-    TypedUseSelectorHook,
-    configureStore,
-    useDispatch,
-    useSelector,
-} from "./lib/redux";
-import { api } from "./servicers/api";
-import userSlice from "./userSlice";
+  ConfigureStoreOptions,
+  TypedUseSelectorHook,
+  configureStore,
+  useDispatch,
+  useSelector,
+} from './lib/redux'
+import { api } from './servicers/api'
+import userSlice from './userSlice'
 
 export const createStore = (
-  options?: ConfigureStoreOptions["preloadedState"] | undefined
+  options?: ConfigureStoreOptions['preloadedState'] | undefined,
 ) =>
   configureStore({
     reducer: {
@@ -19,11 +19,11 @@ export const createStore = (
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(api.middleware),
     ...options,
-  });
+  })
 
-export const store = createStore();
+export const store = createStore()
 
-export type AppDispatch = typeof store.dispatch;
-export const useAppDispatch: () => AppDispatch = useDispatch;
-export type RootState = ReturnType<typeof store.getState>;
-export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
+export type AppDispatch = typeof store.dispatch
+export const useAppDispatch: () => AppDispatch = useDispatch
+export type RootState = ReturnType<typeof store.getState>
+export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector

@@ -1,6 +1,6 @@
-import { Box, Button, Typography } from "@/lib/mui";
+import { Box, Button, Typography } from '@/lib/mui'
 
-const NftInstallPlugin: React.FC = () => {
+export const NftInstallPlugin: React.FC = () => {
   return (
     <Box
       display="flex"
@@ -12,7 +12,7 @@ const NftInstallPlugin: React.FC = () => {
       <img
         src="./metamask-fox.svg"
         alt="MetaMask Logo"
-        style={{ width: "200px" }}
+        style={{ width: '200px' }}
       />
       <Button
         variant="contained"
@@ -24,7 +24,5 @@ const NftInstallPlugin: React.FC = () => {
         MetaMask
       </Button>
     </Box>
-  );
-};
-
-export default NftInstallPlugin;
+  )
+}

@@ -4,13 +4,13 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:8000/',
   // prepareHeaders: (headers, { getState }) => {
-    // By default, if we have a token in the store, let's use that for authenticated requests
-    // const token = (getState() as RootState).auth.token
-    // if (token) {
-    //   headers.set('authentication', `Bearer ${token}`)
-    // }
-    // headers.set('Content-Type', 'application/json');
-    // return headers;
+  // By default, if we have a token in the store, let's use that for authenticated requests
+  // const token = (getState() as RootState).auth.token
+  // if (token) {
+  //   headers.set('authentication', `Bearer ${token}`)
+  // }
+  // headers.set('Content-Type', 'application/json');
+  // return headers;
   // },
 })
 
@@ -20,7 +20,7 @@ const baseQuery = fetchBaseQuery({
  * Create a base API to inject endpoints into elsewhere.
  * Components using this API should import from the injected site,
  * in order to get the appropriate types,
- * and to ensure that the file injecting the endpoints is loaded 
+ * and to ensure that the file injecting the endpoints is loaded
  */
 export const api = createApi({
   /**

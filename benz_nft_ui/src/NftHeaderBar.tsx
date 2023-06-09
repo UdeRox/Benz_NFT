@@ -1,24 +1,19 @@
-import WalletOutlinedIcon from "@mui/icons-material/WalletOutlined";
-import { useEffect } from "react";
-import { authenticated, userNftFetched, walletConnected } from "./actions";
-import { connectToWallet, getTheContract } from "./connectToWallet";
-import {
-  AppBar,
-  Backdrop,
-  Box,
-  Button,
-  CircularProgress,
-  Toolbar,
-  Typography,
-} from "./lib/mui";
-import { Owner, useGetOwnerForConnectedWalletQuery } from "./servicers/userApi";
-import { useAppDispatch, useTypedSelector } from "./store";
-
+import WalletOutlinedIcon from '@mui/icons-material/WalletOutlined'
+import { Tooltip } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { walletConnected } from './actions'
+import { NftBackDrop, NftMiddleEllipsis } from './components'
+import { connectToWallet, getTheContract } from './connectToWallet'
+import { AppBar, Box, Button, Toolbar, Typography } from './lib/mui'
+import { useGetOwnerForConnectedWalletQuery } from './servicers/userApi'
+import { useAppDispatch, useTypedSelector } from './store'
+import { authenticated } from './userSlice'
 
 export const NftHeaderBar = () => {
-  const { owner, activeWallet } = useTypedSelector((state) => state.user);
-
-  const dispatch = useAppDispatch();
+  const { owner, activeWallet } = useTypedSelector((state) => state.user)
+  const [mintingPeriod, setMintingPeriod] = useState<any>()
+  const dispatch = useAppDispatch()
+  const [showToolTip, setShowToolTip] = useState<boolean>(false)
   const {
     data = {},
     isLoading,
@@ -26,57 +21,67 @@ export const NftHeaderBar = () => {
     isSuccess = false,
   } = useGetOwnerForConnectedWalletQuery(activeWallet, {
     skip: !activeWallet,
-  });
+  })
 
   const onClickConnectToWallet = async () => {
-    const { account, balance } = await connectToWallet();
-    dispatch(walletConnected(account));
-  };
-  useEffect(() => {
-    if (isSuccess) {
-      // @ts-ignore
-      const user: any = data.data as Owner;
-      console.log("Data Results ");
-      dispatch(authenticated({ ...user }));
+    if (activeWallet) {
+      await navigator.clipboard.writeText(activeWallet)
+      setShowToolTip(true)
+    } else {
+      const { account, balance } = await connectToWallet()
+      console.log('Account - ', account)
+      dispatch(walletConnected(account))
     }
-  }, [data]);
+  }
 
   useEffect(() => {
-    const getUserNfts = async () => {
-      const { contract } = await getTheContract();
-      // @ts-ignore
-      const resultNfts = await contract.getOwnedTokens(owner.walletAddress);
-      console.log("Rresults ntsss ", resultNfts);
-      dispatch(userNftFetched(resultNfts));
-    };
-    if (owner) getUserNfts();
-  }, [owner]);
+    const getValidityPeriod = async () => {
+      const { contract } = await getTheContract()
+      const validDate = await contract.getMintingPeriod()
+      setMintingPeriod(validDate)
+    }
+
+    getValidityPeriod()
+  }, [activeWallet])
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log('Data Results ')
+      dispatch(authenticated({ ...data }))
+    }
+  }, [data])
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
         position="static"
-        sx={{ backgroundColor: "whitesmoke", color: "black" }}
+        sx={{ backgroundColor: 'whitesmoke', color: 'black' }}
       >
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             BENZ NFT
           </Typography>
-          <Button
-            variant="outlined"
-            color="inherit"
-            onClick={onClickConnectToWallet}
-            endIcon={<WalletOutlinedIcon />}
+          <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>
+            {/* {(parseInt(mintingPeriod)* 1000)} */}
+            {new Date(mintingPeriod * 1000).toLocaleDateString()}
+          </Typography>
+          <Tooltip
+            title="Copied"
+            open={showToolTip}
+            onClose={() => setShowToolTip(false)}
           >
-            {activeWallet ? `${activeWallet}` : `Connect Wallet`}
-          </Button>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={onClickConnectToWallet}
+              endIcon={<WalletOutlinedIcon />}
+            >
+              <NftMiddleEllipsis text={activeWallet ?? `Connect Wallet`} />
+            </Button>
+          </Tooltip>
         </Toolbar>
       </AppBar>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <NftBackDrop open={isLoading} />
     </Box>
-  );
-};
+  )
+}

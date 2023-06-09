@@ -1,3 +1,3 @@
-import Countdown from "react-countdown";
+import Countdown from 'react-countdown'
 
-export { Countdown };
+export { Countdown }

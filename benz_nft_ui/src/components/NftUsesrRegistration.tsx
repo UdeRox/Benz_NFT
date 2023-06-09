@@ -7,32 +7,30 @@ import {
   LinearProgress,
   TextField,
   Typography,
-} from "@mui/material";
-import { useState } from "react";
-import { useRegisterUserMutation } from "../servicers/userApi";
-import { useAppDispatch, useTypedSelector } from "../store";
-import { authenticated } from "../actions";
+} from '@/lib/mui'
+import { useState } from 'react'
+import { useRegisterUserMutation } from '../servicers/userApi'
+import { useAppDispatch, useTypedSelector } from '../store'
+import { authenticated } from '@/userSlice'
 
 const NftUserRegistration = () => {
-  const [nric, setNric] = useState<string>("");
+  const [nric, setNric] = useState<string>('')
   const [registerUser, { data, isLoading, error, isSuccess }] =
-    useRegisterUserMutation();
-  const { activeWallet = "" } = useTypedSelector((state) => state.user);
-  const dispatch = useAppDispatch();
+    useRegisterUserMutation()
+  const { activeWallet = '' } = useTypedSelector((state) => state.user)
+  const dispatch = useAppDispatch()
   const registerUserEvent = () => {
-    // @ts-ignore
     registerUser({ nric, walletAddress: activeWallet })
       .then((result) => {
-        // @ts-ignore
-        dispatch(authenticated({ walletAddress: activeWallet, nric }));
-        console.log("Succfully registered!!", result);
+        dispatch(authenticated({ walletAddress: activeWallet, nric }))
+        console.log('Succfully registered!!', result)
       })
-      .catch((error) => console.log("Error while registering user", error));
-  };
+      .catch((error) => console.log('Error while registering user', error))
+  }
   return (
     <Box sx={{ paddingTop: 2 }}>
       {isLoading && (
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: '100%' }}>
           <LinearProgress />
         </Box>
       )}
@@ -73,12 +71,12 @@ const NftUserRegistration = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Alert severity={isSuccess ? "success" : "error"}>
-       {/* @ts-ignore */}
+      <Alert severity={isSuccess ? 'success' : 'error'}>
+        {/* @ts-ignore */}
         <AlertTitle>{isSuccess ? data?.message : error?.data.error}</AlertTitle>
       </Alert>
     </Box>
-  );
-};
+  )
+}
 
-export default NftUserRegistration;
+export default NftUserRegistration
