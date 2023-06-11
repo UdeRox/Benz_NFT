@@ -5,6 +5,7 @@ import {
   useDispatch,
   useSelector,
 } from './lib/redux'
+import { rtkQueryToasterHandler } from './rtkErrorLogger'
 import { api } from './servicers/api'
 import userSlice from './userSlice'
 
@@ -17,7 +18,7 @@ export const createStore = (
       [api.reducerPath]: api.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(api.middleware),
+      getDefaultMiddleware().concat(api.middleware, rtkQueryToasterHandler),
     ...options,
   })
 

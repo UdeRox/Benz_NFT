@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { Owner } from './servicers/userApi'
+import { Owner, userApi } from './servicers/userApi'
 import { RootState } from './store'
 
 const initialState = {
@@ -7,11 +7,13 @@ const initialState = {
   activeWallet: null,
   isAuthenticated: false,
   userNftList: [],
+  receipt: null,
 } as {
   owner: null | Owner
   isAuthenticated: boolean
   activeWallet: string | null
   userNftList: any[]
+  receipt: string | null
 }
 
 const slice = createSlice({
@@ -29,24 +31,32 @@ const slice = createSlice({
       state.userNftList = action.payload
     },
   },
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addMatcher(postsApi.endpoints.login.matchPending, (state, action) => {
-  //       console.log('pending', action)
-  //     })
-  //     .addMatcher(postsApi.endpoints.login.matchFulfilled, (state, action) => {
-  //       console.log('fulfilled', action)
-  //       state.user = action.payload.user
-  //       state.token = action.payload.token
-  //     })
-  //     .addMatcher(postsApi.endpoints.login.matchRejected, (state, action) => {
-  //       console.log('rejected', action)
-  //     })
-  // },
+  extraReducers: (builder) => {
+    builder
+      .addMatcher(
+        userApi.endpoints.getOwnerForConnectedWallet.matchFulfilled,
+        (state, action) => {
+          const { data } = action.payload
+          state.owner = data
+          state.isAuthenticated = true
+        },
+      )
+      .addMatcher(
+        userApi.endpoints.getOwnerForConnectedWallet.matchRejected,
+        (state, action) => {
+          state.activeWallet = null
+        },
+      )
+      .addMatcher(
+        userApi.endpoints.updateMintedReceipt.matchFulfilled,
+        (state, action) => {
+          state.receipt = action.payload
+        },
+      )
+  },
 })
 
 export const { authenticated } = slice.actions
 export default slice.reducer
 
-export const selectIsAuthenticated = (state: RootState) =>
-  state.user.isAuthenticated
+export const selectUser = (state: RootState) => state.user

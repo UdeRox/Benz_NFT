@@ -19,44 +19,45 @@ contract BenzToken is ERC721, ERC721URIStorage, Ownable {
     /// @notice Keep track of total number of minted nfts.
     Counters.Counter private _tokenIdCounter;
     /// @dev Mapping to check specific URL already been minted.
-    mapping(string => uint8) existingURIs;
+    mapping(string => uint256) existingURIs;
     /// @dev Mapping to keep Nft owned by each address.
     mapping(address => EnumerableSet.UintSet) private _walletTokens;
     /// @dev Mapping to check user already minted
     mapping(address => bool) private _hasMinted;
     /// @dev Max supply limits to 5 and, pass the value when deployment,
-    uint256 public maxSupply;
+    uint256 public immutable maxSupply;
     /// @dev Cost in (wei) required to mint.
     uint256 public cost;
     /// @dev Timestamp when minting starts.
     uint256 public mintStartDate;
-    /// @dev Minting window period.
-    uint256 public validityPeriodInDays;
+    /// @dev Timestamp when minting Ends.
+    uint256 public mintEndDate;
+    /// @notice save the mited token receipts in the contract state.
+    mapping(uint256 => bytes32) private _mintedReceipts;
 
-    event LogMessage(string message);
-    event LogValue(uint256 value);
-    event LogObject(uint256 id, string value);
-    event AddressLogged(address indexed userAddress);
+    event MintingPeriodSet(uint256 startDate, uint256 endDate);
+    event NFTMinted(uint256 tokenId, string metadataURI);
 
     constructor(
         uint256 _cost,
-        uint256 _validityPeriodInDays,
-        uint8 _maxSupply
+        uint8 _maxSupply,
+        uint256 _mintStartDate,
+        uint256 _mintEndDate
     ) ERC721("BenzToken", "BNZTK") {
-        mintStartDate = block.timestamp;
+        // mintStartDate = block.timestamp;
+        mintStartDate = _mintStartDate;
+        mintEndDate = _mintEndDate;
         maxSupply = _maxSupply;
         cost = _cost;
-        validityPeriodInDays = _validityPeriodInDays;
     }
 
-    function safeMint(address to, string memory uri) public onlyOwner {
-        require(!_hasMinted[to], "Address has already minted an NFT");
-        _hasMinted[to] = true;
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
-        _walletTokens[to].add(tokenId);
+    function setMintingPeriod(
+        uint256 startDate,
+        uint256 endDate
+    ) public onlyOwner {
+        mintStartDate = startDate;
+        mintEndDate = endDate;
+        emit MintingPeriodSet(mintStartDate, mintEndDate);
     }
 
     // The following functions are overrides required by Solidity.
@@ -64,7 +65,8 @@ contract BenzToken is ERC721, ERC721URIStorage, Ownable {
         uint256 tokenId
     ) internal override(ERC721, ERC721URIStorage) {
         super._burn(tokenId);
-        _walletTokens[ownerOf(tokenId)].remove(tokenId);
+        bool removed = _walletTokens[ownerOf(tokenId)].remove(tokenId);
+        require(removed, "Error while burning/removing the token");
     }
 
     function tokenURI(
@@ -73,40 +75,36 @@ contract BenzToken is ERC721, ERC721URIStorage, Ownable {
         return super.tokenURI(tokenId);
     }
 
+    function getMintingPeriod() public view returns (uint256, uint256) {
+        return (mintStartDate, mintEndDate);
+    }
+
     function supportsInterface(
         bytes4 interfaceId
     ) public view override(ERC721, ERC721URIStorage) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 
-    function isContentOwned(string memory uri) public view returns (bool) {
-        return existingURIs[uri] == 1;
-    }
-
     function payToMint(
         address recipient,
         string memory metadataURI
     ) public payable returns (uint256) {
-        require(
-            block.timestamp < mintStartDate + validityPeriodInDays * 1 days,
-            "Minting time has expired"
-        ); // Multiply by 1 days to convert to seconds
+        require(!_hasMinted[recipient], "Address has already minted an NFT");
         require(totalSupply() < maxSupply, "Max supply reached");
         require(existingURIs[metadataURI] != 1, "NFT already Minted");
         require(msg.value >= cost, "Insufficient payment");
+
+        _hasMinted[recipient] = true;
         uint256 newItemId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         existingURIs[metadataURI] = 1;
 
         _mint(recipient, newItemId);
         _setTokenURI(newItemId, metadataURI);
-        _walletTokens[recipient].add(newItemId);
-        emit LogMessage("new itemId");
-        emit LogValue(newItemId);
-        emit LogMessage(" Address");
-        emit AddressLogged(recipient);
-        emit LogMessage(" metaURI");
-        emit LogMessage(metadataURI);
+        bool added = _walletTokens[recipient].add(newItemId);
+        require(added, "Error while adding the token to wallet");
+        _saveMintedReceipt(newItemId);
+        emit NFTMinted(newItemId, metadataURI);
         return newItemId;
     }
 
@@ -114,8 +112,11 @@ contract BenzToken is ERC721, ERC721URIStorage, Ownable {
         return _tokenIdCounter.current();
     }
 
-    function getValidityPeriod() public view returns (uint256) {
-        return validityPeriodInDays;
+    function _saveMintedReceipt(uint256 tokenId) internal {
+        bytes32 receiptHash = keccak256(
+            abi.encodePacked(block.timestamp, tokenId, msg.sender)
+        );
+        _mintedReceipts[tokenId] = receiptHash;
     }
 
     function getOwnedTokens(
@@ -126,5 +127,11 @@ contract BenzToken is ERC721, ERC721URIStorage, Ownable {
             tokens[i] = _walletTokens[wallet].at(i);
         }
         return tokens;
+    }
+
+    /// @notice found withdraw function.
+    function withdrawEther() public onlyOwner {
+        uint256 balance = address(this).balance;
+        payable(owner()).transfer(balance);
     }
 }

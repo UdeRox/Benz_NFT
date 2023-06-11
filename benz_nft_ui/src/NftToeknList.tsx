@@ -19,6 +19,7 @@ import {
   Typography,
 } from './lib/mui'
 import { useTypedSelector } from './store'
+import { selectUser } from './userSlice'
 
 const LazyLoadedImage: React.FC<ImageProps> = ({ title, src }) => {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -47,6 +48,7 @@ const LazyLoadedImage: React.FC<ImageProps> = ({ title, src }) => {
 }
 
 const getOwnedTokens = async (walletAddress: string | null) => {
+
   try {
     const { contract } = await getTheContract()
     const count = await contract.totalSupply()
@@ -68,12 +70,10 @@ const getOwnedTokens = async (walletAddress: string | null) => {
 }
 
 const NftUserNftList: React.FC = () => {
+  const { isAuthenticated, owner, activeWallet } = useTypedSelector(selectUser)
   const [isLoadingNFTs, setIsLoadingNFTs] = useState<boolean>(false)
   const [nfts, setNFTs] = React.useState<any>([])
-  const { isAuthenticated, activeWallet = '' } = useTypedSelector(
-    (state) => state.user,
-  )
-
+  
   useEffect(() => {
     const asyncGetTokens = async () => {
       setIsLoadingNFTs(true)
@@ -124,7 +124,7 @@ const NftUserNftList: React.FC = () => {
           </Box>
         </Grow>
       )}
-      {!isLoadingNFTs && !displayNftListComponent && <NftMindBox />}
+      {!isLoadingNFTs && !displayNftListComponent && activeWallet && <NftMindBox />}
       <NftBackDrop open={isLoadingNFTs} />
     </React.Fragment>
   )

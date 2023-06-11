@@ -1,5 +1,5 @@
+import BenzToken from '@/abis/BenzToken.json'
 import { ethers } from 'ethers'
-import BenzToken from './abis/BenzToken.json'
 export const contractAddress = import.meta.env.VITE_NFT_CONTRACT_ADDRESS
 
 export const connectToWallet = async () => {

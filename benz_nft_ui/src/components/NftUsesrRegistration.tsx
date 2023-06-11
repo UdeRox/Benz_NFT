@@ -1,6 +1,4 @@
 import {
-  Alert,
-  AlertTitle,
   Box,
   Button,
   Grid,
@@ -8,27 +6,27 @@ import {
   TextField,
   Typography,
 } from '@/lib/mui'
+import { authenticated, selectUser } from '@/userSlice'
 import { useState } from 'react'
 import { useRegisterUserMutation } from '../servicers/userApi'
 import { useAppDispatch, useTypedSelector } from '../store'
-import { authenticated } from '@/userSlice'
 
 const NftUserRegistration = () => {
   const [nric, setNric] = useState<string>('')
   const [registerUser, { data, isLoading, error, isSuccess }] =
     useRegisterUserMutation()
-  const { activeWallet = '' } = useTypedSelector((state) => state.user)
+  const { activeWallet = '', owner } = useTypedSelector(selectUser)
   const dispatch = useAppDispatch()
   const registerUserEvent = () => {
     registerUser({ nric, walletAddress: activeWallet })
       .then((result) => {
         dispatch(authenticated({ walletAddress: activeWallet, nric }))
-        console.log('Succfully registered!!', result)
+        console.log('Successfully registered!!', result)
       })
       .catch((error) => console.log('Error while registering user', error))
   }
   return (
-    <Box sx={{ paddingTop: 2 }}>
+    <Box sx={{ padding: 2 }} hidden={!!owner?.nric}>
       {isLoading && (
         <Box sx={{ width: '100%' }}>
           <LinearProgress />
@@ -41,12 +39,15 @@ const NftUserRegistration = () => {
         alignItems="center"
         spacing={1}
       >
-        <Grid item>
+        <Grid item hidden={!activeWallet}>
           <Typography variant="body1">
-            Wallert Address: {`${activeWallet}`}
+            Wallet Address: {`${activeWallet}`}
           </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant="h5">To mint your own NFT</Typography>
           <Typography variant="body2">
-            To start mint NFT, please enter your NRIC here.
+            Register today with your NRIC.
           </Typography>
         </Grid>
         <Grid item>
@@ -58,6 +59,7 @@ const NftUserRegistration = () => {
             placeholder="NRIC Number"
             fullWidth
             variant="standard"
+            // helperText="Incorrect entry."
             onChange={(event) => setNric(event.target.value)}
           />
           <Grid item>
@@ -71,10 +73,6 @@ const NftUserRegistration = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Alert severity={isSuccess ? 'success' : 'error'}>
-        {/* @ts-ignore */}
-        <AlertTitle>{isSuccess ? data?.message : error?.data.error}</AlertTitle>
-      </Alert>
     </Box>
   )
 }

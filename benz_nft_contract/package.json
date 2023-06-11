@@ -5,6 +5,8 @@
   "license": "MIT",
   "scripts": {
     "hardhat-node": "hardhat node",
+    "lint": "hardhat check",
+    "test":"hardhat test",
     "deploy": "npm run compile && hardhat run scripts/deploy.ts --network localhost",
     "compile": "hardhat compile && cp ./artifacts/contracts/BenzToken.sol/BenzToken.json ../benz_nft_ui/src/abis/BenzToken.json"
   },
@@ -16,6 +18,7 @@
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@nomiclabs/hardhat-etherscan": "^3.0.0",
+    "@nomiclabs/hardhat-solhint": "^3.0.1",
     "@typechain/ethers-v5": "^10.1.0",
     "@typechain/hardhat": "^6.1.2",
     "@types/chai": "^4.2.0",
@@ -24,14 +27,16 @@
     "chai": "^4.2.0",
     "ethers": "^5.7.2",
     "hardhat": "^2.14.0",
-    "hardhat-gas-reporter": "^1.0.8",
-    "solidity-coverage": "^0.8.0",
+    "hardhat-gas-reporter": "^1.0.9",
+    "hardhat-gas-trackooor": "^1.0.2",
+    "solidity-coverage": "^0.8.2",
     "ts-node": ">=8.0.0",
     "typechain": "^8.1.0",
     "typescript": ">=4.5.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.9.0",
-    "dotenv": "^16.1.4"
+    "@openzeppelin/contracts": "4.9.1",
+    "dotenv": "^16.1.4",
+    "hardhat-foundry": "^0.0.5"
   }
 }

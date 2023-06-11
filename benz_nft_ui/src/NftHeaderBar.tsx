@@ -7,21 +7,23 @@ import { connectToWallet, getTheContract } from './connectToWallet'
 import { AppBar, Box, Button, Toolbar, Typography } from './lib/mui'
 import { useGetOwnerForConnectedWalletQuery } from './servicers/userApi'
 import { useAppDispatch, useTypedSelector } from './store'
-import { authenticated } from './userSlice'
+import { selectUser } from './userSlice'
 
 export const NftHeaderBar = () => {
-  const { owner, activeWallet } = useTypedSelector((state) => state.user)
+  const { activeWallet, owner } = useTypedSelector(selectUser)
   const [mintingPeriod, setMintingPeriod] = useState<any>()
   const dispatch = useAppDispatch()
   const [showToolTip, setShowToolTip] = useState<boolean>(false)
   const {
-    data = {},
     isLoading,
     error,
     isSuccess = false,
-  } = useGetOwnerForConnectedWalletQuery(activeWallet, {
-    skip: !activeWallet,
-  })
+  } = useGetOwnerForConnectedWalletQuery(
+    { activeWallet, nric: owner?.nric },
+    {
+      skip: activeWallet == null,
+    },
+  )
 
   const onClickConnectToWallet = async () => {
     if (activeWallet) {
@@ -44,13 +46,6 @@ export const NftHeaderBar = () => {
     getValidityPeriod()
   }, [activeWallet])
 
-  useEffect(() => {
-    if (isSuccess) {
-      console.log('Data Results ')
-      dispatch(authenticated({ ...data }))
-    }
-  }, [data])
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -61,11 +56,7 @@ export const NftHeaderBar = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             BENZ NFT
           </Typography>
-          <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>
-            {/* {(parseInt(mintingPeriod)* 1000)} */}
-            {new Date(mintingPeriod * 1000).toLocaleDateString()}
-          </Typography>
-          <Tooltip
+                    <Tooltip
             title="Copied"
             open={showToolTip}
             onClose={() => setShowToolTip(false)}

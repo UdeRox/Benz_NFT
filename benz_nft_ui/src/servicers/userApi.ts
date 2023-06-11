@@ -1,9 +1,13 @@
 import { api } from './api'
+
+interface Wallet {
+  address: string
+}
 export interface Owner {
   id?: string
   username?: string
   nric?: string
-  wallets?: string[]
+  wallets?: Wallet[]
   walletAddress?: string | null
 }
 
@@ -23,42 +27,46 @@ export const userApi = api.injectEndpoints({
           body,
         }
       },
-      //   invalidatesTags: ["Posts"],
-    }),
-    getOwners: build.query<OwnerResponse, void>({
-      query: () => 'owners/',
     }),
     getOwnerForConnectedWallet: build.query<
       OwnerResponse,
-      string | undefined | null
+      { activeWallet: string | null; nric: string | undefined }
     >({
-      query: (address) => `owners/${address}`,
+      // query: (address) => `owners/${address}`,
+      query: (address) => ({
+        url: '/owners',
+        params: {
+          wallet: address.activeWallet,
+          nric: address.nric,
+          // param2: params.param2,
+          // Add more parameters if needed
+        },
+      }),
     }),
-    updatePost: build.mutation<Owner, Partial<Owner>>({
-      query(data) {
-        const { id, ...body } = data
+    updateOwnerWithWallet: build.mutation<OwnerResponse, Partial<Owner>>({
+      query(body) {
         return {
-          url: `posts/${id}`,
+          url: `owners/`,
           method: 'PUT',
           body,
         }
       },
-      // invalidatesTags: (post) => [{ type: 'Posts', id: post?.id }],
     }),
-    deletePost: build.mutation<{ success: boolean; id: number }, number>({
-      query(id) {
+    updateMintedReceipt: build.mutation<any,{ wallet: string|null; receipt: string }>({
+      query(body) {
         return {
-          url: `posts/${id}`,
-          method: 'DELETE',
+          url: `receipt/`,
+          method: 'POST',
+          body,
         }
       },
-      invalidatesTags: (post) => [{ type: 'Posts', id: post?.id }],
     }),
   }),
 })
 
 export const {
   useRegisterUserMutation,
-  useGetOwnersQuery,
   useGetOwnerForConnectedWalletQuery,
+  useUpdateOwnerWithWalletMutation,
+  useUpdateMintedReceiptMutation
 } = userApi

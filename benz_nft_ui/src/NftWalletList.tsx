@@ -6,6 +6,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from './lib/mui'
 
 const WalletList = ({ connectToWallet }: { connectToWallet: () => void }) => {
@@ -18,6 +19,17 @@ const WalletList = ({ connectToWallet }: { connectToWallet: () => void }) => {
         border: '1px solid rgb(229, 232, 235)',
       }}
     >
+      <Box
+        sx={{
+          p: 2,
+          display: 'flex',
+          justifyContent: 'center',
+          bgcolor: 'background.paper',
+          border: '1px solid rgb(229, 232, 235)',
+        }}
+      >
+        <Typography variant="body1">Login with your Wallet </Typography>
+      </Box>
       <Box>
         <List sx={{ width: '200px' }}>
           <ListItem disablePadding>
