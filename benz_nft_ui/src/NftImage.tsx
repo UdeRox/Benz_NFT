@@ -99,7 +99,6 @@ export const NftImage: React.FC = () => {
       }}
     >
       <NftBackDrop open={minting} />
-      <span>{`Minting Stattus >>>> ${mintingStatus}`}</span>
       <Grid container direction="column" spacing={2} alignItems="center">
         <Grid item>
           <Card

@@ -36,15 +36,15 @@ export const NftHeaderBar = () => {
     }
   }
 
-  useEffect(() => {
-    const getValidityPeriod = async () => {
-      const { contract } = await getTheContract()
-      const validDate = await contract.getMintingPeriod()
-      setMintingPeriod(validDate)
-    }
+  // useEffect(() => {
+  //   const getValidityPeriod = async () => {
+  //     const { contract } = await getTheContract()
+  //     const {startDate, endDate} = await contract.getMintingPeriod()
+  //     // setMintingPeriod(validDate)
+  //   }
 
-    getValidityPeriod()
-  }, [activeWallet])
+  //   getValidityPeriod()
+  // }, [activeWallet])
 
   return (
     <Box sx={{ flexGrow: 1 }}>
