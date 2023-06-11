@@ -1,18 +1,16 @@
+# Use the official Golang base image
 FROM golang:alpine
 
-RUN mkdir /app
-
+ENV DB_USER=user
+ENV DB_PASSWORD=Password123
+ENV DB_HOST=db
+ENV DB_NAME=benz_nft
 WORKDIR /app
 
-ADD go.mod .
-ADD go.sum .
-
-
-RUN go mod download
-RUN go get github.com/githubnemo/CompileDaemon
-
-ADD . .
+# Copy the necessary files to the container
+COPY . .
 
 EXPOSE 8000
 
-ENTRYPOINT CompileDaemon --build="go build main.go" --command=./main
+# Build and run the application
+CMD ["go", "run", "main.go"]

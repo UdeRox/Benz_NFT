@@ -2,17 +2,17 @@ package infrastructure
 
 import (
 	"fmt"
-	"os"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"os"
 )
 
-//Database struct
+// Database struct
 type Database struct {
 	DB *gorm.DB
 }
 
-//NewDatabase : intializes and returns mysql db
+// NewDatabase : initializes and returns mysql db
 func NewDatabase() Database {
 	USER := os.Getenv("DB_USER")
 	PASS := os.Getenv("DB_PASSWORD")
