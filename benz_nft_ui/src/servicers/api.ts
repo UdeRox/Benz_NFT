@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 // Create our baseQuery instance
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:8000/',
+  baseUrl: import.meta.env.VITE_BACK_END_URL,
   // prepareHeaders: (headers, { getState }) => {
   // By default, if we have a token in the store, let's use that for authenticated requests
   // const token = (getState() as RootState).auth.token
