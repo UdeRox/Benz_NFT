@@ -6,7 +6,6 @@ import (
 	"benzNft/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"fmt"
 )
 
 // OwnerController represents the controller for managing owners.
