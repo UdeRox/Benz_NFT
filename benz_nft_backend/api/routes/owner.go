@@ -15,7 +15,7 @@ type OwnerRoute struct {
 func NewOwnerRoute(
 	controller controller.OwnerController,
 	handler infrastructure.GinRouter,
-	
+
 ) OwnerRoute {
 	return OwnerRoute{
 		Controller: controller,
@@ -23,12 +23,13 @@ func NewOwnerRoute(
 	}
 }
 
-//Setup -> setups new choice Routes
+// Setup -> setups new choice Routes
 func (p OwnerRoute) Setup() {
 	owner := p.Handler.Gin.Group("/owners")
 	{
 		owner.POST("/", p.Controller.AddOwner)
-		owner.GET("/:wallet", p.Controller.GetOwner)
-		owner.PUT("/:id", p.Controller.UpdateOwner)
+		owner.GET("", p.Controller.GetOwner)
+		owner.PUT("/", p.Controller.UpdateOwner)
+		owner.POST("/receipt", p.Controller.UpdateMintedReceipt)
 	}
 }

@@ -5,50 +5,40 @@ import (
 )
 
 type Owner struct {
-	ID            int64     `gorm:"primary_key;auto_increment" json:"id"`
-	NRIC          string    `gorm:"size:200;unique" json:"nric"`
-	WalletAddress string    `gorm:"size:3000" json:"walletAddress"`
-	CreatedAt     time.Time `json:"created_at,omitempty"`
-	UpdatedAt     time.Time `json:"updated_at,omitempty"`
+	ID        int64       `gorm:"primary_key;auto_increment" json:"id"`
+	NRIC      string      `gorm:"size:200;unique" json:"nric"`
+	Wallets   []Wallet    `gorm:"foreignKey:NRIC;references:NRIC" json:"wallets"`
+	CreatedAt time.Time   `json:"created_at,omitempty"`
+	UpdatedAt time.Time   `json:"updated_at,omitempty"`
 }
-
-// type WalletAddress struct {
-// 	ID        int64     `gorm:"primary_key;auto_increment" json:"id"`
-// 	OwnerID   int64     `gorm:"index" json:"owner_id"`
-// 	Address   string    `gorm:"size:3000" json:"address"`
-// 	CreatedAt time.Time `json:"created_at,omitempty"`
-// 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-// }
 
 func (owner *Owner) TableName() string {
 	return "owner"
 }
 
-// func (address *WalletAddress) TableName() string {
-// 	return "addresses"
-// }
-
 func (owner *Owner) ResponseMap() map[string]interface{} {
 	resp := make(map[string]interface{})
 	resp["id"] = owner.ID
-	resp["nrice"] = owner.NRIC
-	resp["walletAddress"] = owner.WalletAddress
+	resp["nric"] = owner.NRIC
 	resp["created_at"] = owner.CreatedAt
 	resp["updated_at"] = owner.UpdatedAt
+
+	wallets := make([]Wallet, len(owner.Wallets))
+	for i, _ := range owner.Wallets {
+		wallets[i] = owner.Wallets[i]
+	}
+	resp["wallets"] = wallets
 	return resp
 }
+type Wallet struct {
+	ID        int64     `gorm:"primary_key;auto_increment" json:"id"`
+	NRIC      string    `gorm:"index" json:"nric"`
+	Address   string    `gorm:"unique" json:"address"`
+	Receipt   string    `json:"receipt"`
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+}
 
-// func Migrate(db *gorm.DB) error {
-// 	err := db.AutoMigrate(&Owner{}, &WalletAddress{})
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	// Add foreign key constraint to addresses table
-// 	err = db.Exec("ALTER TABLE addresses ADD CONSTRAINT addresses_owner_id_foreign FOREIGN KEY (owner_id) REFERENCES owners (id);").Error
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
+func (wallet *Wallet) TableName() string {
+	return "wallets"
+}

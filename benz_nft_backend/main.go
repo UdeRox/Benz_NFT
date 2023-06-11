@@ -14,15 +14,14 @@ func init() {
 }
 
 func main() {
-	router := infrastructure.NewGinRouter()                        //router has been initialized and configured
-	db := infrastructure.NewDatabase()                             // database has been initialized and configured
-	ownerRepository := repository.NewOwnerRepository(db)           // repository are being setup
-	ownerService := service.NewOwnerService(ownerRepository)       // service are being setup
-	ownerController := controller.NewOwnerController(ownerService) // controller are being set up
-	ownerRoute := routes.NewOwnerRoute(ownerController, router)    // post routes are initialized
-	ownerRoute.Setup()                                             // post routes are being setup
+	router := infrastructure.NewGinRouter()                     // Initialize and configure the router
+	db := infrastructure.NewDatabase()                          // Initialize and configure the database
+	ownerRepository := repository.NewOwnerRepository(db)        // Set up the owner repository
+	ownerService := service.NewOwnerService(ownerRepository)    // Set up the owner service
+	ownerController := controller.NewOwnerController(ownerService) // Set up the owner controller
+	ownerRoute := routes.NewOwnerRoute(*ownerController, router)   // Initialize the owner routes
+	ownerRoute.Setup()                                          // Set up the owner routes
 
-	db.DB.AutoMigrate(&models.Owner{}) // migrating Post model to database table
-	router.Gin.Run(":8000")            //server started on 8000 port
-
+	db.DB.AutoMigrate(&models.Owner{}, &models.Wallet{}) // Perform database migrations for Owner and Wallet models
+	router.Gin.Run(":8000") // Start the server and listen on port 8000
 }

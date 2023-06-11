@@ -6,81 +6,98 @@ import (
 	"benzNft/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
+	"fmt"
 )
 
+// OwnerController represents the controller for managing owners.
 type OwnerController struct {
-	service service.OwnerService
+	service *service.OwnerService
 }
 
-func NewOwnerController(s service.OwnerService) OwnerController {
-	return OwnerController{
+// NewOwnerController creates a new instance of OwnerController.
+func NewOwnerController(s *service.OwnerService) *OwnerController {
+	return &OwnerController{
 		service: s,
 	}
 }
 
-// AddOwner : AddOwner controller
-func (p *OwnerController) AddOwner(ctx *gin.Context) {
+// AddOwner creates a new owner.
+func (oc *OwnerController) AddOwner(c *gin.Context) {
 	var owner models.Owner
-	ctx.ShouldBindJSON(&owner)
+	c.ShouldBindJSON(&owner)
 
-	err := p.service.Save(owner)
-	if err != nil {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "NRIC already registered with another Wallet!")
+	// Check if owner already exists
+	existingOwner, err := oc.service.Find(owner)
+	if err == nil {
+		// Owner already exists, return the existing owner
+		response := existingOwner.ResponseMap()
+		c.JSON(http.StatusOK, &util.Response{
+			Success: true,
+			Message: "Owner already exists",
+			Data:    response,
+		})
 		return
 	}
-	util.SuccessJSON(ctx, http.StatusCreated, "Successfully Created Owner")
+
+	err = oc.service.Save(owner)
+	if err != nil {
+		util.ErrorJSON(c, http.StatusBadRequest, "NRIC already registered with another Wallet!")
+		return
+	}
+	util.SuccessJSON(c, http.StatusCreated, "Successfully Created Owner")
 }
 
-// GetOwner : get owner by wallet address
-func (p *OwnerController) GetOwner(c *gin.Context) {
-	walletParam := c.Param("wallet")
-	var owner models.Owner
-	owner.WalletAddress = walletParam
-	foundOwner, err := p.service.Find(owner)
+// GetOwner retrieves the owner by wallet address.
+func (oc *OwnerController) GetOwner(c *gin.Context) {
+	walletParam := c.Query("wallet")
+	nricParam := c.Query("nric")
+	foundOwner, err := oc.service.GetOwner(nricParam, walletParam)
 	if err != nil {
-		util.ErrorJSON(c, http.StatusNotFound, "NRIC not registered!")
+		util.ErrorJSON(c, http.StatusNotFound, "Invalid NRIC or Wallet Address!")
 		return
 	}
+
 	response := foundOwner.ResponseMap()
 
 	c.JSON(http.StatusOK, &util.Response{
 		Success: true,
 		Message: "Result set of Owner",
-		Data:    &response})
-
+		Data:    response,
+	})
 }
 
-// UpdateOwner : get update by id
-func (p OwnerController) UpdateOwner(ctx *gin.Context) {
-	idParam := ctx.Param("id")
-
-	id, err := strconv.ParseInt(idParam, 10, 64)
-
-	if err != nil {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "id invalid")
-		return
-	}
+// UpdateOwner updates the owner by NRIC.
+func (oc *OwnerController) UpdateOwner(c *gin.Context) {
+	nricParam := c.Param("nric")
 	var owner models.Owner
-	owner.ID = id
+	owner.NRIC = nricParam
 
-	ownerRecord, err := p.service.Find(owner)
-
+	err := oc.service.UpdateOwner(owner, c)
 	if err != nil {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "Owner with given id not found")
+		util.ErrorJSON(c, http.StatusBadRequest, "Failed to update Owner")
 		return
 	}
-	ctx.ShouldBindJSON(&ownerRecord)
 
-	if err := p.service.Update(ownerRecord); err != nil {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to store Owner")
-		return
-	}
-	response := ownerRecord.ResponseMap()
-
-	ctx.JSON(http.StatusOK, &util.Response{
+	response := owner.ResponseMap()
+	c.JSON(http.StatusOK, &util.Response{
 		Success: true,
 		Message: "Successfully Updated Owner",
 		Data:    response,
 	})
+}
+
+func (oc *OwnerController) UpdateMintedReceipt(c *gin.Context) {
+	var payload struct {
+		WalletAddress string `json:"wallet"`
+		Receipt       string `json:"receipt"`
+	}
+	c.ShouldBindJSON(&payload)
+
+	err := oc.service.UpdateWalletReceipt(payload.WalletAddress, payload.Receipt)
+	if err != nil {
+		util.ErrorJSON(c, http.StatusInternalServerError, "Failed to update receipt for wallet")
+		return
+	}
+
+	util.SuccessJSON(c, http.StatusOK, "Receipt updated successfully")
 }
