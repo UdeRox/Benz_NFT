@@ -19,10 +19,3 @@ npx hardhat node
 npx hardhat test 
 npx hardhat run scripts/deploy.ts --network localhost
 
-
-# Release changes 
-Update package.json with script to compile, run, copy ABI file to frontend 
-compile and deploy the BenzToken.sol smart contract to local node
-
-
-
